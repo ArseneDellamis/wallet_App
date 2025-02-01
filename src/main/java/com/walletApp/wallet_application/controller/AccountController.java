@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 public class AccountController {
 
@@ -42,7 +42,7 @@ public class AccountController {
          return ResponseEntity.status(HttpStatus.FOUND).body(getAccountDetailsById);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateAccount(@NotNull @RequestHeader("Authorization") String token,
                                            @PathVariable Long id,
                                            @RequestBody AccUpdateDto dto) {

@@ -90,7 +90,9 @@ public class AccountService {
         Account acc = repository.findById(id)
                 .orElseThrow(()->new RuntimeException("Account not found"));
 
-
+        if (acc.getUser().getId() != user.getId()) {
+            throw new IllegalArgumentException("Account does not belong to this user");
+        }
         acc.setBalance(dto.getBalance());
 
         return repository.save(acc);
@@ -100,6 +102,13 @@ public class AccountService {
         String username = getUsername(token, jwtService);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User Not found"));
+
+        Account acc = repository.findById(id)
+                .orElseThrow(()->new RuntimeException("Account not found"));
+
+        if (acc.getUser().getId() != user.getId()) {
+            throw new IllegalArgumentException("Account does not belong to this user");
+        }
 
         repository.deleteById(id);
     }
