@@ -48,4 +48,54 @@ public class BudgetService {
         return repository.findAllByUserId(user.getId());
     }
 
+    public Budget getBudgetDetails(String token, Long id) {
+
+        username = getUsername(token, jwtService);
+        User user = checkIfUserExists(username, userRepository);
+
+        Budget getBudget =repository.findById(id).orElseThrow(
+                ()-> new RuntimeException("Budget Not Found")
+        );
+
+        if (user.getId() != getBudget.getUser().getId()) {
+            throw new IllegalArgumentException("Budget not associated with this user");
+        }
+
+        return getBudget;
+    }
+
+    public Budget updateBudget(String token, Long id, @NotNull BudgetDto dto) {
+        username = getUsername(token,jwtService);
+        User user = checkIfUserExists(username, userRepository);
+
+        Budget getBudget =repository.findById(id).orElseThrow(
+                ()-> new RuntimeException("Budget Not Found")
+        );
+
+        if (user.getId() != getBudget.getUser().getId()) {
+            throw new IllegalArgumentException("Budget not associated with this user");
+        }
+
+        getBudget.setLimitAmount(dto.getLimit_amount());
+
+        return repository.save(getBudget);
+    }
+
+    public void deleteBudget(String token, Long id) {
+//        get username/email from token
+        username = getUsername(token,jwtService);
+//        check if the user exists using username/email
+        User user = checkIfUserExists(username, userRepository);
+//        checks if budget exists
+        Budget getBudget =repository.findById(id).orElseThrow(
+                ()-> new RuntimeException("Budget Not Found")
+        );
+//        check if the budget is for that user
+        if (user.getId() != getBudget.getUser().getId()) {
+            throw new IllegalArgumentException("Budget not associated with this user");
+        }
+
+        repository.deleteById(id);
+    }
+
 }
