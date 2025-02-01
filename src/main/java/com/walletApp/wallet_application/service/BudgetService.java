@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 import static com.walletApp.wallet_application.service.ServiceUtilities.*;
 
 @Service
@@ -28,10 +31,7 @@ public class BudgetService {
 
         username = getUsername(token,jwtService);
 
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(
-                        ()-> new UsernameNotFoundException("user not found")
-                );
+        User user = checkIfUserExists(username, userRepository);
 
         var budget = Budget.builder()
                 .user(user)
@@ -41,5 +41,11 @@ public class BudgetService {
         return repository.save(budget);
     }
 
+    public List<Budget> budgetListByUser(String token) {
+        username = getUsername(token, jwtService);
+        User user = checkIfUserExists(username, userRepository);
+
+        return repository.findAllByUserId(user.getId());
+    }
 
 }

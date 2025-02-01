@@ -41,8 +41,7 @@ public class AccountService {
 
     public Account createAccount(String token, @NotNull AccountDto accountDto) {
          username = getUsername(token, jwtService);
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+        User user = checkIfUserExists(username, userRepository);
 
         // Ensure accountNumber does not exist already
         repository.findByAccountNumber(accountDto.getAccountNumber())
@@ -73,8 +72,7 @@ public class AccountService {
 
     public Account getAccountDetails(String token, Long id) {
         username = getUsername(token, jwtService);
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+        User user = checkIfUserExists(username, userRepository);
 
         Account getAccount = repository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Account not found!"));
@@ -86,8 +84,7 @@ public class AccountService {
 
     public Account updateAccount(String token, Long id,@NotNull AccUpdateDto dto) {
         username = getUsername(token, jwtService);
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+        User user = checkIfUserExists(username, userRepository);
 
         Account acc = repository.findById(id)
                 .orElseThrow(()->new RuntimeException("Account not found"));
@@ -102,8 +99,7 @@ public class AccountService {
 
     public void deleteAccount(String token, Long id) {
         username = getUsername(token, jwtService);
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(()-> new UsernameNotFoundException("User Not found"));
+        User user = checkIfUserExists(username, userRepository);
 
         Account acc = repository.findById(id)
                 .orElseThrow(()->new RuntimeException("Account not found"));
