@@ -23,12 +23,12 @@ public class AccountService {
     private final AccountRepository repository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
-
+    private String username;
 
     public List<Account> getAllAccounts(String token) {
         // extract username from token
 
-         String username = getUsername(token,jwtService);
+        username = getUsername(token,jwtService);
 
 //         retrieve user by username/email
         User user = userRepository.findByEmail(username)
@@ -40,7 +40,7 @@ public class AccountService {
     }
 
     public Account createAccount(String token, @NotNull AccountDto accountDto) {
-        String username = getUsername(token, jwtService);
+         username = getUsername(token, jwtService);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
@@ -72,7 +72,7 @@ public class AccountService {
     }
 
     public Account getAccountDetails(String token, Long id) {
-        String username = getUsername(token, jwtService);
+        username = getUsername(token, jwtService);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
@@ -85,7 +85,7 @@ public class AccountService {
     }
 
     public Account updateAccount(String token, Long id,@NotNull AccUpdateDto dto) {
-        String username = getUsername(token, jwtService);
+        username = getUsername(token, jwtService);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
@@ -101,7 +101,7 @@ public class AccountService {
     }
 
     public void deleteAccount(String token, Long id) {
-        String username = getUsername(token, jwtService);
+        username = getUsername(token, jwtService);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User Not found"));
 
