@@ -11,8 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
+import org.jetbrains.annotations.*;
 import static com.walletApp.wallet_application.service.ServiceUtilities.*;
 
 @Service
@@ -22,6 +21,7 @@ public class AccountService {
     private final AccountRepository repository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+
 
     public List<Account> getAllAccounts(String token) {
         // extract username from token
@@ -37,7 +37,7 @@ public class AccountService {
         return repository.findByUserId(user.getId());
     }
 
-    public Account createAccount(String token, AccountDto accountDto) {
+    public Account createAccount(String token, @NotNull AccountDto accountDto) {
         String username = getUsername(token, jwtService);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
@@ -69,5 +69,38 @@ public class AccountService {
         return repository.save(account); // Save the new account
     }
 
+    public Account getAccountDetails(String token, Long id) {
+        String username = getUsername(token, jwtService);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
+        Account getAccount = repository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Account not found!"));
+        if (user.getId() != getAccount.getUser().getId()){
+            throw new IllegalArgumentException("Account not associated with this user");
+        }
+        return getAccount;
+    }
+
+    public Account updateAccount(String token, Long id,@NotNull AccUpdateDto dto) {
+        String username = getUsername(token, jwtService);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+
+        Account acc = repository.findById(id)
+                .orElseThrow(()->new RuntimeException("Account not found"));
+
+
+        acc.setBalance(dto.getBalance());
+
+        return repository.save(acc);
+    }
+
+    public void deleteAccount(String token, Long id) {
+        String username = getUsername(token, jwtService);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(()-> new UsernameNotFoundException("User Not found"));
+
+        repository.deleteById(id);
+    }
 }

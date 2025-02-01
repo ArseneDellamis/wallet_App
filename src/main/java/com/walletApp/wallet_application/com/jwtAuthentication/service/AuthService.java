@@ -5,10 +5,12 @@ import com.walletApp.wallet_application.com.jwtAuthentication.AuthenticationConf
 import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.AuthenticationRequest;
 import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.AuthenticationResponse;
 import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.RegisterRequest;
+import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.UpdateRequest;
 import com.walletApp.wallet_application.com.jwtAuthentication.Role;
 import com.walletApp.wallet_application.com.jwtAuthentication.User;
 import com.walletApp.wallet_application.com.jwtAuthentication.dao.RoleRepository;
 import com.walletApp.wallet_application.com.jwtAuthentication.dao.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import static com.walletApp.wallet_application.service.ServiceUtilities.*;
 
 @Service
 @RequiredArgsConstructor
@@ -80,4 +83,21 @@ public class AuthService {
                 .token(jwtToken)
                 .build();
     }
+
+    public User updateAuthenticatedUserInfo(String token, @NotNull UpdateRequest request) {
+        String username = getUsername(token, service);
+        User user = repository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New and current password should not match!");
+        }
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return repository.save(user);
+    }
+
 }
