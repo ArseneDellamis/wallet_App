@@ -23,7 +23,9 @@ public class Transaction {
     private Double amount;
     private LocalDateTime transactionDate;
     private String description;
-    private String type; // incomes or expenses
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType type; // incomes or expenses
 
     // Many transactions belong to one account
     @ManyToOne

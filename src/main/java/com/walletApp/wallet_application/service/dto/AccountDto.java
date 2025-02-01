@@ -1,4 +1,5 @@
-package com.walletApp.wallet_application.service;
+package com.walletApp.wallet_application.service.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccUpdateDto {
+public class AccountDto {
+    private String accountType;
+    private String accountNumber;
     private Double balance;
 }

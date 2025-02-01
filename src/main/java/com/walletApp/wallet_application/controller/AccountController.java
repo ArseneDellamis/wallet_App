@@ -2,8 +2,8 @@ package com.walletApp.wallet_application.controller;
 
 
 import com.walletApp.wallet_application.entity.Account;
-import com.walletApp.wallet_application.service.AccUpdateDto;
-import com.walletApp.wallet_application.service.AccountDto;
+import com.walletApp.wallet_application.service.dto.AccUpdateDto;
+import com.walletApp.wallet_application.service.dto.AccountDto;
 import com.walletApp.wallet_application.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
