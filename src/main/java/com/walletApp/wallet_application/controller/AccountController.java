@@ -44,6 +44,15 @@ public class AccountController {
          return ResponseEntity.status(HttpStatus.FOUND).body(responseBody);
     }
 
+    @GetMapping("/{accountId}")
+    public ResponseEntity<?> getAccountByAccountId(@NotNull @RequestHeader("Authorization") String token, @PathVariable String accountNumber){
+
+        jwtToken = token.replace("Bearer ","");
+        Account details = accountService.getAccountDetailsByAccountNumber(jwtToken, accountNumber);
+        AccountResponseBody responseBody = new AccountResponseBody(details.getType(), details.getAccountNumber(), details.getBalance(), details.getCreatedAt());
+        return ResponseEntity.status(HttpStatus.FOUND).body(responseBody);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateAccount(@NotNull @RequestHeader("Authorization") String token,
                                            @PathVariable Long id,

@@ -27,15 +27,9 @@ public class AccountService {
 
     public List<Account> getAllAccounts(String token) {
         // extract username from token
-
         username = getUsername(token,jwtService);
-
 //         retrieve user by username/email
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(
-                        ()->new UsernameNotFoundException("username not found")
-                );
-
+        User user = checkIfUserExists(username, userRepository);
         return repository.findByUserId(user.getId());
     }
 
@@ -73,12 +67,9 @@ public class AccountService {
     public Account getAccountDetails(String token, Long id) {
         username = getUsername(token, jwtService);
         User user = checkIfUserExists(username, userRepository);
-
-        Account getAccount = repository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Account not found!"));
-        if (user.getId() != getAccount.getUser().getId()){
-            throw new IllegalArgumentException("Account not associated with this user");
-        }
+        Account getAccount = checkIfAccountExistsById(id, repository);
+//        this is to prevent user to access irrelevant accounts
+        checkIfUserId_is_same_as_UserIdRegisteredOnTheAccount(user.getId(), getAccount.getUser().getId());
         return getAccount;
     }
 
@@ -86,12 +77,10 @@ public class AccountService {
         username = getUsername(token, jwtService);
         User user = checkIfUserExists(username, userRepository);
 
-        Account acc = repository.findById(id)
-                .orElseThrow(()->new RuntimeException("Account not found"));
+        Account acc = checkIfAccountExistsById(id, repository);
 
-        if (acc.getUser().getId() != user.getId()) {
-            throw new IllegalArgumentException("Account does not belong to this user");
-        }
+//        this is to avoid user update other accounts not for him/her
+        checkIfUserId_is_same_as_UserIdRegisteredOnTheAccount(user.getId(), acc.getUser().getId());
         acc.setBalance(dto.getBalance());
 
         return repository.save(acc);
@@ -109,5 +98,18 @@ public class AccountService {
         }
 
         repository.deleteById(id);
+    }
+
+    public Account getAccountDetailsByAccountNumber(String token, String accountNumber) {
+
+        username = getUsername(token, jwtService);
+        User user = checkIfUserExists(username, userRepository);
+
+        Account checked = checkIfAccountExistsByAccountNumber(accountNumber, repository);
+
+//        now check if account belongs to this user
+
+        checkIfUserId_is_same_as_UserIdRegisteredOnTheAccount(user.getId(), checked.getUser().getId());
+        return checked;
     }
 }

@@ -53,13 +53,9 @@ public class BudgetService {
         username = getUsername(token, jwtService);
         User user = checkIfUserExists(username, userRepository);
 
-        Budget getBudget =repository.findById(id).orElseThrow(
-                ()-> new RuntimeException("Budget Not Found")
-        );
+        Budget getBudget =checkIfBudgetExists(id, repository);
 
-        if (user.getId() != getBudget.getUser().getId()) {
-            throw new IllegalArgumentException("Budget not associated with this user");
-        }
+        checkIfUserId_is_same_as_UserIdRegisteredOnTheBudget(user.getId() ,getBudget.getUser().getId());
 
         return getBudget;
     }
@@ -67,15 +63,8 @@ public class BudgetService {
     public Budget updateBudget(String token, Long id, @NotNull BudgetDto dto) {
         username = getUsername(token,jwtService);
         User user = checkIfUserExists(username, userRepository);
-
-        Budget getBudget =repository.findById(id).orElseThrow(
-                ()-> new RuntimeException("Budget Not Found")
-        );
-
-        if (user.getId() != getBudget.getUser().getId()) {
-            throw new IllegalArgumentException("Budget not associated with this user");
-        }
-
+        Budget getBudget =checkIfBudgetExists(id, repository);
+        checkIfUserId_is_same_as_UserIdRegisteredOnTheBudget(user.getId(), getBudget.getUser().getId());
         getBudget.setLimitAmount(dto.getLimit_amount());
 
         return repository.save(getBudget);
@@ -87,13 +76,9 @@ public class BudgetService {
 //        check if the user exists using username/email
         User user = checkIfUserExists(username, userRepository);
 //        checks if budget exists
-        Budget getBudget =repository.findById(id).orElseThrow(
-                ()-> new RuntimeException("Budget Not Found")
-        );
+        Budget getBudget =checkIfBudgetExists(id, repository);
 //        check if the budget is for that user
-        if (user.getId() != getBudget.getUser().getId()) {
-            throw new IllegalArgumentException("Budget not associated with this user");
-        }
+        checkIfUserId_is_same_as_UserIdRegisteredOnTheBudget(user.getId(), getBudget.getUser().getId());
 
         repository.deleteById(id);
     }
