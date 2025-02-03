@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
@@ -14,6 +15,21 @@ import java.time.LocalDate;
 public class BudgetDto {
 
     private Double limit_amount;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
+    // Convert startDate from String to LocalDate
+    public LocalDate getStartDateAsLocalDate() {
+        return (startDate != null && !startDate.isEmpty()) ? LocalDate.parse(startDate, formatter) : null;
+    }
+
+    // Convert endDate from String to LocalDate
+    public LocalDate getEndDateAsLocalDate() {
+        return (endDate != null && !endDate.isEmpty()) ? LocalDate.parse(endDate, formatter) : null;
+    }
+
+
 }

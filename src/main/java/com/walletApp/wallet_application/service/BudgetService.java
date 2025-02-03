@@ -35,6 +35,8 @@ public class BudgetService {
         var budget = Budget.builder()
                 .user(user)
                 .limitAmount(dto.getLimit_amount())
+                .startDate(dto.getStartDateAsLocalDate())
+                .endDate(dto.getEndDateAsLocalDate())
                 .build();
 
         return repository.save(budget);
