@@ -7,12 +7,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -34,18 +40,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 
     http
             .csrf(AbstractHttpConfigurer::disable) // Disable CSRF to prevent attacks
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests((authorize) ->
                     authorize
                             // Allow access to authentication endpoints (register, login)
                             .requestMatchers("/api/auth/**").permitAll()
-
-                            // Allow GET requests to /netpipo/api/employees/** for all authenticated users
-//                            .requestMatchers(HttpMethod.GET, "/netpipo/api/employees/**").authenticated()
-
-                            // Restrict POST, PUT, DELETE to only users with ADMIN role
-//                            .requestMatchers(HttpMethod.POST, "/netpipo/api/employees/**").hasAuthority("ADMIN")
-//                            .requestMatchers(HttpMethod.PUT, "/netpipo/api/employees/**").hasAuthority("ADMIN")
-//                            .requestMatchers(HttpMethod.DELETE, "/netpipo/api/employees/**").hasAuthority("ADMIN")
 
                             // Any other request must be authenticated
                             .anyRequest().authenticated()
@@ -61,5 +60,17 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 
     return http.build();
 }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:5500")); // Allow Live Server
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // HTTP methods
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Headers
+        configuration.setAllowCredentials(true); // Allow cookies if needed
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints
+        return source;
+    }
 
 }

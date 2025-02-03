@@ -52,6 +52,12 @@ public class AuthService {
         }
 //        now here we are creating a user and build the user using the
 //        requests from frontend or postman
+
+        // Check if the email already exists in the database.
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists.");
+        }
+
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
