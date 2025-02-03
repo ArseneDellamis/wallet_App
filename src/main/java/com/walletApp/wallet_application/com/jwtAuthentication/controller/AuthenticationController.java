@@ -3,13 +3,12 @@ package com.walletApp.wallet_application.com.jwtAuthentication.controller;
 import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.AuthenticationRequest;
 import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.AuthenticationResponse;
 import com.walletApp.wallet_application.com.jwtAuthentication.PayLoad.RegisterRequest;
+import com.walletApp.wallet_application.com.jwtAuthentication.User;
 import com.walletApp.wallet_application.com.jwtAuthentication.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -18,6 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 // exposed RestfulApi for login and Register
 public class AuthenticationController {
     private final AuthService service;
+    private String jwtToken;
+
+
+    @GetMapping("/username")
+    public String getUsername(@NotNull @RequestHeader("Authorization") String token) {
+        jwtToken = token.replace("Bearer ", "");
+       User user =service.getUserDetails(jwtToken);
+    return user.getName();
+    }
 
 //    registering a new user http://localhost:8080/netpipo/api/auth/register
     @PostMapping("/register")

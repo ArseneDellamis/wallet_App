@@ -100,4 +100,9 @@ public class AuthService {
         return repository.save(user);
     }
 
+    public User getUserDetails(String token) {
+        String user = getUsername(token, service);
+
+        return checkIfUserExists(user, repository);
+    }
 }
