@@ -1,4 +1,4 @@
-package com.walletApp.wallet_application.service.dto;
+package com.walletApp.wallet_application.dto;
 
 
 import lombok.AllArgsConstructor;

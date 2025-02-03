@@ -1,6 +1,5 @@
-package com.walletApp.wallet_application.service.dto;
+package com.walletApp.wallet_application.dto;
 
-import com.walletApp.wallet_application.entity.Account;
 import com.walletApp.wallet_application.entity.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

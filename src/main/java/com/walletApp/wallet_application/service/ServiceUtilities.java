@@ -44,12 +44,12 @@ public class ServiceUtilities {
     }
 
     public static void checkIfUserId_is_same_as_UserIdRegisteredOnTheAccount(Long userId, Long accountUserId) {
-        if (userId != accountUserId){
+        if (userId .equals(accountUserId)){
             throw new IllegalArgumentException("Account not associated with this user");
         }
     }
     public static void checkIfUserId_is_same_as_UserIdRegisteredOnTheBudget(Long userId, Long budgetUserId) {
-        if (userId != budgetUserId){
+        if (userId .equals(budgetUserId)){
             throw new IllegalArgumentException("Account not associated with this user");
         }
     }

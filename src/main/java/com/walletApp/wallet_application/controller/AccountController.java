@@ -2,10 +2,10 @@ package com.walletApp.wallet_application.controller;
 
 
 import com.walletApp.wallet_application.entity.Account;
-import com.walletApp.wallet_application.service.dto.AccUpdateDto;
-import com.walletApp.wallet_application.service.dto.AccountDto;
+import com.walletApp.wallet_application.dto.AccUpdateDto;
+import com.walletApp.wallet_application.dto.AccountDto;
 import com.walletApp.wallet_application.service.AccountService;
-import com.walletApp.wallet_application.service.dto.AccountResponseBody;
+import com.walletApp.wallet_application.dto.AccountResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -21,18 +21,19 @@ public class AccountController {
 
     private final AccountService accountService;
     private String jwtToken;
-    @GetMapping
-    public ResponseEntity<List<Account>> getAllAccounts(@NotNull @RequestHeader("Authorization") String token) {
-         jwtToken = token.replace("Bearer ", "");
-        return ResponseEntity.ok(accountService.getAllAccounts(jwtToken));
-    }
 
     @PostMapping("/add")
     public ResponseEntity<?> createAccount(@NotNull @RequestHeader("Authorization") String token, @RequestBody AccountDto accountDto) {
-         jwtToken = token.replace("Bearer ", "");
+        jwtToken = token.replace("Bearer ", "");
         Account newAccount = accountService.createAccount(jwtToken, accountDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Account>> getAllAccounts(@NotNull @RequestHeader("Authorization") String token,AccountResponseBody responseBody) {
+         jwtToken = token.replace("Bearer ", "");
+        return ResponseEntity.ok(accountService.getAllAccounts(jwtToken));
     }
 
     @GetMapping("/{id}")

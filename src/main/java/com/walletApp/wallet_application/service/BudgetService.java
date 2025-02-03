@@ -6,10 +6,9 @@ import com.walletApp.wallet_application.com.jwtAuthentication.dao.UserRepository
 import com.walletApp.wallet_application.entity.Budget;
 import com.walletApp.wallet_application.repository.AccountRepository;
 import com.walletApp.wallet_application.repository.BudgetRepository;
-import com.walletApp.wallet_application.service.dto.BudgetDto;
+import com.walletApp.wallet_application.dto.BudgetDto;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

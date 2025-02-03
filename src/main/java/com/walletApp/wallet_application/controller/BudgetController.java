@@ -1,11 +1,8 @@
 package com.walletApp.wallet_application.controller;
 
-import com.walletApp.wallet_application.entity.Account;
 import com.walletApp.wallet_application.entity.Budget;
 import com.walletApp.wallet_application.service.BudgetService;
-import com.walletApp.wallet_application.service.dto.AccUpdateDto;
-import com.walletApp.wallet_application.service.dto.AccountDto;
-import com.walletApp.wallet_application.service.dto.BudgetDto;
+import com.walletApp.wallet_application.dto.BudgetDto;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
