@@ -5,6 +5,7 @@ import com.walletApp.wallet_application.entity.Account;
 import com.walletApp.wallet_application.service.dto.AccUpdateDto;
 import com.walletApp.wallet_application.service.dto.AccountDto;
 import com.walletApp.wallet_application.service.AccountService;
+import com.walletApp.wallet_application.service.dto.AccountResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -35,11 +36,12 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> getAccountById(@NotNull @RequestHeader("Authorization") String token, @PathVariable Long id) {
+    public ResponseEntity<?> getAccountById(@NotNull @RequestHeader("Authorization") String token, @PathVariable Long id) {
          jwtToken = token.replace("Bearer ","");
 
-         Account getAccountDetailsById = accountService.getAccountDetails(jwtToken, id);
-         return ResponseEntity.status(HttpStatus.FOUND).body(getAccountDetailsById);
+         Account details = accountService.getAccountDetails(jwtToken, id);
+        AccountResponseBody responseBody = new AccountResponseBody(details.getType(), details.getAccountNumber(), details.getBalance(), details.getCreatedAt());
+         return ResponseEntity.status(HttpStatus.FOUND).body(responseBody);
     }
 
     @PutMapping("/{id}")
